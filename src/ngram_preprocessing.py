@@ -75,12 +75,8 @@ def main():
         ordered_unique_sents.append(s[0])
     train_sentences = ordered_unique_sents[:-500]
     test_sentences = ordered_unique_sents[500:]
-    for i in ordered_unique_sents:
-        if "hey" in i:
-            print(i)
-    inverted_index = build_inverted_index(ordered_unique_sents)
-    print(inverted_index['hey'])
 
+    inverted_index = build_inverted_index(ordered_unique_sents)
     firstword_index = build_firstword_index(ordered_unique_sents)
     vocab = build_vocab(ordered_unique_sents)
     paragraph = ""
@@ -92,6 +88,8 @@ def main():
     utils.write_data_pkl(vocab, constants.VOCAB_FILE)
     utils.write_data_pkl(paragraph, constants.PARAGRAPH_FILE)
     utils.write_data_pkl(ordered_unique_sents, constants.UNIQUE_SENTENCE_LIST_FILE)
+    utils.write_data_pkl(train_sentences, constants.TRAIN_SENT_LIST_FILE)
+    utils.write_data_pkl(test_sentences, constants.TEST_SENT_LIST_FILE)
 
 
 if __name__ == '__main__':
