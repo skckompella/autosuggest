@@ -8,8 +8,12 @@ python ngram_preprocessing.py #Required only once
 python run_ngram_model.py
 ```
 This starts the autosuggest server. You can create any request as shown in the challenge requirements:
-```
+```bash
 curl http://localhost:4000/autosuggest?q=When+did
+```
+You can also run the test script that gives suggestions and time taken to service request
+```bash
+python test.py
 ```
 
 ## Preprocessing
