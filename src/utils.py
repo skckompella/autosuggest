@@ -47,8 +47,7 @@ def get_max_len(sentences):
         max_len = max([max_len, len(s)])
     return max_len
 
-#http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks-in-python
-#https://github.com/rrenaud/Gibberish-Detector/blob/master/gib_detect_train.py#L16
+
 def get_chunks(l, n):
     for i in range(0, len(l) - n + 1):
         yield l[i:i+n]
