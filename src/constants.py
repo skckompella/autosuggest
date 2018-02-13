@@ -8,8 +8,9 @@ SENTENCES_COUNTS_FILE = "../data/sentence_counts.pkl"
 TRAIN_SENT_LIST_FILE = "../data/train_sents.pkl"
 TEST_SENT_LIST_FILE = "../data/test_setns.pkl"
 PARAGRAPH_FILE = "../data/paragraph.pkl"
-WORD_MODEL_FILE = "../data/word_model.pkl"
-BIGRAM_MODEL_FILE = "../data/bigram_model.pkl"
+
+WORD_MODEL_FILE = "../model/word_model.pkl"
+BIGRAM_MODEL_FILE = "../model/bigram_model.pkl"
 
 
 
