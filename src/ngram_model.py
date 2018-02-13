@@ -17,13 +17,13 @@ class BiGramModel():
         self.corpus = utils.read_data_pkl(constants.PARAGRAPH_FILE)
         self.inverted_index = utils.read_data_pkl(constants.INVERTED_INDEX_FILE)
         self.firstword_index = utils.read_data_pkl(constants.FIRSTWORD_INDEX_FILE)
-        self.sentences = utils.read_data_pkl(constants.SENTENCES_LIST_FILE)
+        self.sentences = utils.read_data_pkl(constants.UNIQUE_SENTENCE_LIST_FILE)
 
 
     def build_model(self, corpus):
         """
         Build bigram model
-        :param corpus:
+        :param corpus: Space separated string of all sentences
         :return:
         """
         words = utils.tokenize(corpus)
@@ -51,8 +51,8 @@ class BiGramModel():
         """
         Get the top_n most probable suggestions for a word with no preceeding words
         This function is never used because __START__ symbol is always prefixed
-        :param word:
-        :param top_n:
+        :param word: Current word
+        :param top_n: Top suggestions
         :return:
         """
         try:
@@ -65,9 +65,9 @@ class BiGramModel():
     def cur_given_prev(self, prev, cur, top_n=10):
         """
         Get the top_n most probable suggestions for a word given the preceeding word
-        :param prev:
-        :param cur:
-        :param top_n:
+        :param prev: previous word
+        :param cur: Current word
+        :param top_n: Number of top suggestions
         :return:
         """
         probable_words = [w for w, c in self.bigram_model[prev.lower()].most_common()
@@ -80,7 +80,7 @@ class BiGramModel():
     def get_from_firstword_index(self, word):
         return set(self.firstword_index[word])
 
-    def get_sent_match(self, idx, probable_prefix):
+    def get_sent_match(self, idx, probable_prefix): #For multiprocess search. Unused currently
         for p in probable_prefix:
             if p in self.sentences[idx]:
                 return self.sentences[idx]
@@ -100,34 +100,36 @@ class BiGramModel():
             probable_words = self.cur_word(parts[0])
         else:
             probable_words = self.cur_given_prev(parts[-2], parts[-1])
-        print("Probable word prediction: %s seconds ---" % (time.time() - start_time))
-
-
+        print(" > Probable word prediction: %s seconds ---" % (time.time() - start_time))
         probable_prefix = []
         predictions = []
         start_time = time.time()
         probable_sent_indices = self.get_from_inverted_index(parts[0])
         parts.pop(-1)
         prev_text = " ".join(parts)
-        pool = Pool(processes=32)
-        q = Queue()
+        # pool = Pool(processes=32)
+        # q = Queue()
         if prev_predictions is not None:
             pass
         else:
             for p in parts:
-                probable_sent_indices.intersection(self.get_from_inverted_index(p))
+                probable_sent_indices.intersection_update(self.get_from_inverted_index(p))
+            temp = set()
             for p in probable_words:
-                probable_sent_indices.intersection(self.get_from_inverted_index(p))
+                temp.update(probable_sent_indices.intersection(self.get_from_inverted_index(p)))
+            probable_sent_indices.update(temp)
             for w in probable_words:
                 probable_prefix.append(prev_text + ' ' + w)
 
             # with Pool(processes=32) as pool:
             #     sents = pool.starmap(self.get_sent_match, zip(probable_sent_indices, repeat(probable_prefix)))
-            for s in probable_sent_indices:
-                if any(self.sentences[s].startswith(self.start + " " + x) for x in probable_prefix):
-                # if any(x in self.sentences[s] for x in probable_prefix): #Using 'startswith' takes longer than 'in'
+
+            #TODO- Rootcause the need for .strip() and change it
+            #NOTE- Using "in" is faster than startswith
+            for s in sorted(probable_sent_indices):
+                if any(self.sentences[s].startswith(self.start + " " + x.strip()) for x in probable_prefix):
                     predictions.append(self.sentences[s].replace(self.start+" ", "").replace(" "+self.end, "")) #TODO- Sort by number of hits
-        print("Probable sentence prediction: %s seconds ---" % (time.time() - start_time))
+        print(" > Probable sentence prediction: %s seconds ---" % (time.time() - start_time))
 
         return {"Suggestions": predictions}
 
@@ -135,10 +137,12 @@ class BiGramModel():
     def test(self):
         self.build_model(self.corpus)
         # self.load_model()
-        print(self.predict(self.start + " hey"))
-        print(self.predict(self.start + " I c"))
-        print(self.predict(self.start + " It seems"))
-        print(self.predict(self.start + " h"))
+        print(self.predict("hey"))
+        # print(self.predict("I c"))
+        # print(self.predict("It seems"))
+        # print(self.predict("h"))
+        # print(self.predict("i"))
+
 
 if __name__ == '__main__':
     model = BiGramModel()
