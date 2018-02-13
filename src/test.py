@@ -19,5 +19,5 @@ for w in chars:
         print(req, ret.content)
     req += " "
 
-print(times)
-print(mean(times))
+print("Request times: ", times)
+print("Mean request time: ", mean(times))
