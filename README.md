@@ -8,8 +8,12 @@ python ngram_preprocessing.py #Required only once
 python run_ngram_model.py
 ```
 This starts the autosuggest server. You can create any request as shown in the challenge requirements:
-```
+```bash
 curl http://localhost:4000/autosuggest?q=When+did
+```
+You can also run the test script that gives suggestions and time taken to service request
+```bash
+python test.py
 ```
 
 ## Preprocessing
@@ -67,7 +71,7 @@ Also, I wanted to improve word predictions using suffix trees but normal lookup 
 Currently, the model ranks suggestions based on number of hits. If given the time, I want to implement a context based ranking model. I would essentially use a dual LSTM to encode the customer input and agent inputs separately and train a fully connected ranker. This should give pretty good results. 
 
 ## Answers to challenge questions
-1. How would you evaluate your autosuggest server? If you made another version, how would you compare the two to decide which is better?
+**1. How would you evaluate your autosuggest server? If you made another version, how would you compare the two to decide which is better?**
 
    There are three important metrics in the autosuggest server:
 
@@ -83,17 +87,20 @@ Currently, the model ranks suggestions based on number of hits. If given the tim
    The goal is to have <150ms for every request. The multithreaded test might not be very useful. 
   
 
-2. One way to improve the autosuggest server is to give topic-specific suggestions. How would you design an auto-categorization server? It should take a list of messages and return a TopicId. (Assume that every conversation in the training set has a TopicId).
+**2. One way to improve the autosuggest server is to give topic-specific suggestions. How would you design an auto-categorization server? It should take a list of messages and return a TopicId. (Assume that every conversation in the training set has a TopicId).**
+
 This is a text classification problem. Given that topicID is present in the training data I would train a few different classifiers, evaluate their performance and choose the best one - 
  * A Naive Bayes with bag of words and TFIDF features 
  * A linear SVM with with bag of words and TFIDF features, 
  * A fully connected neural network with one hot vector and TFIDF features 
  * A LSTM to generate sentence embedding which then feeds into a fully connected neural network classfier  
 
-3. How would you evaluate if your auto-categorization server is good?
+**3. How would you evaluate if your auto-categorization server is good?**
+
 Given that we have training data, the easiest method is to test for accuracy. 
 
-4. Processing hundreds of millions of conversations for your autosuggest and auto-categorize models could take a very long time. How could you distribute the processing across multiple machines?
+**4. Processing hundreds of millions of conversations for your autosuggest and auto-categorize models could take a very long time. How could you distribute the processing across multiple machines?**
+
 I tried to implement this with a multi process implementation (this would only be a simulation). But creating processes each time (given that flask does not allow you to maintain state between requests) was taking too long and chose to comment those statements out. This can of course be implemented better if there are stateful server
 This is how I would distribute workload: 
  * The longest running part of the code is matching the input pattern with stored sentences. 
