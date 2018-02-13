@@ -94,12 +94,10 @@ class BiGramModel():
         :return:
         """
         text = text.lower()
+        text = self.start + ' ' + text
         parts = text.split()
         start_time = time.time()
-        if len(parts) < 2:
-            probable_words = self.cur_word(parts[0])
-        else:
-            probable_words = self.cur_given_prev(parts[-2], parts[-1])
+        probable_words = self.cur_given_prev(parts[-2], parts[-1])
         print(" > Probable word prediction: %s seconds ---" % (time.time() - start_time))
         probable_prefix = []
         predictions = []
@@ -118,16 +116,16 @@ class BiGramModel():
             for p in probable_words:
                 temp.update(probable_sent_indices.intersection(self.get_from_inverted_index(p)))
             probable_sent_indices.update(temp)
+
             for w in probable_words:
                 probable_prefix.append(prev_text + ' ' + w)
-
             # with Pool(processes=32) as pool:
             #     sents = pool.starmap(self.get_sent_match, zip(probable_sent_indices, repeat(probable_prefix)))
 
             #TODO- Rootcause the need for .strip() and change it
             #NOTE- Using "in" is faster than startswith
             for s in sorted(probable_sent_indices):
-                if any(self.sentences[s].startswith(self.start + " " + x.strip()) for x in probable_prefix):
+                if any(self.sentences[s].startswith(x.strip()) for x in probable_prefix):
                     predictions.append(self.sentences[s].replace(self.start+" ", "").replace(" "+self.end, "")) #TODO- Sort by number of hits
         print(" > Probable sentence prediction: %s seconds ---" % (time.time() - start_time))
 
@@ -135,13 +133,38 @@ class BiGramModel():
 
 
     def test(self):
-        self.build_model(self.corpus)
-        # self.load_model()
-        print(self.predict("hey"))
+        # self.build_model(self.corpus)
+        start_time = time.time()
+        self.load_model()
         print(self.predict("I c"))
+        print(" > Total time: %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
+        self.load_model()
         print(self.predict("It seems"))
+        print(" > Total time: %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
+        self.load_model()
+        print(self.predict("hey"))
+        print(" > Total time: %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
+        self.load_model()
         print(self.predict("h"))
+        print(" > Total time: %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
+        self.load_model()
         print(self.predict("i"))
+        print(" > Total time: %s seconds ---" % (time.time() - start_time))
+
+        start_time = time.time()
+        self.load_model()
+        print(self.predict("it seems we are"))
+        print(" > Total time: %s seconds ---" % (time.time() - start_time))
+
+
 
 
 if __name__ == '__main__':
