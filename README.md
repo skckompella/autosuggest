@@ -88,6 +88,7 @@ Currently, the model ranks suggestions based on number of hits. If given the tim
   
 
 2. One way to improve the autosuggest server is to give topic-specific suggestions. How would you design an auto-categorization server? It should take a list of messages and return a TopicId. (Assume that every conversation in the training set has a TopicId).
+
 This is a text classification problem. Given that topicID is present in the training data I would train a few different classifiers, evaluate their performance and choose the best one - 
  * A Naive Bayes with bag of words and TFIDF features 
  * A linear SVM with with bag of words and TFIDF features, 
@@ -95,6 +96,7 @@ This is a text classification problem. Given that topicID is present in the trai
  * A LSTM to generate sentence embedding which then feeds into a fully connected neural network classfier  
 
 3. How would you evaluate if your auto-categorization server is good?
+
 Given that we have training data, the easiest method is to test for accuracy. 
 
 4. Processing hundreds of millions of conversations for your autosuggest and auto-categorize models could take a very long time. How could you distribute the processing across multiple machines?
