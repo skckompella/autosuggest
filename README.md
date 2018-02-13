@@ -58,6 +58,11 @@ This is based on an average of 8 test inputs only. This was manually generated. 
  * Replace proper nouns (names) with a generic string
 
 ## Discussion
+Like I mention earlier, I was strongly against using a fully generated prediction given that the challenge expects full sentences to be perdicted. If I were to do it in a fully generative manner, I would train a LSTM/GRU language and generate entire sentence using beam search. 
+
+I was pleasantly surprised how well the retrieval based model worked. I wanted to improve word predictions using suffix trees but normal lookup itself was sufficiently fast. However, I feel the model can be improved by using a  LSTM based word prediction and then a retrieval based sentence suggestion. 
+
+Currently, the model ranks suggestions based on number of hits. If given the time, I want to implement a context based ranking model. I would essentially use a dual LSTM to encode the customer input and agent inputs separately and train a fully connected ranker. This should give pretty good results. 
 
 ## Answers to challenge questions
 1. How would you evaluate your autosuggest server? If you made another version, how would you compare the two to decide which is better?
