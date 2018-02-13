@@ -39,10 +39,11 @@ curl http://localhost:4000/autosuggest?q=When+did
 ## Performance
 The accuracy cannot not be verified without curating the dataset. However, it was verified that the user input string matches with the sentences generated (this is however expected)
 Time taken to service a request:
- * Average total time : ~70ms
- * Data load time: ~45ms
- * Average prediction time: ~25ms
-This is based on an average of 8 test inputs only. This was manually generated. A more accurate method would be to automate this. 
+ * Average total time : ~80ms
+ * Data load time: ~50ms
+ * Average prediction time: ~30ms
+ 
+This is based on an average of 5 different test inputs only.  
 
 ## Reasons for model choices
  * I started with bigram baseline. Turns out this works pretty well. There are some scaling issues that can be handled with efficient datastructures and/or approximation mechanisms.
