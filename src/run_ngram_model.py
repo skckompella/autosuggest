@@ -5,7 +5,6 @@ from ngram_model import BiGramModel
 
 @app.route("/autosuggest/")
 def generate_suggestions():
-
     if "q" in request.args:
         q = request.args.get('q')
         model = BiGramModel()
@@ -14,5 +13,7 @@ def generate_suggestions():
         return jsonify(preds)
     else:
         return None
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='127.0.0.1', port=4000)
