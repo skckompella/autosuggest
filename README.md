@@ -50,7 +50,6 @@ This is based on an average of 8 test inputs only. This was manually generated. 
  
 ## Improvements if given more time
 
- * Implement an evaluation strategy to test how fast it is able to generate suggestions
  * **Implement context based ranking model**
  * Implement LSTM language model to suggest next word
  * Try a trigram model to evaluate possible improvements
@@ -77,9 +76,10 @@ Currently, the model ranks suggestions based on number of hits. If given the tim
  
    * **Performance (time for prediction)**: The most important metric is the performance of the model. The predictions should update faster than the input. Typically an average user types at about 180 characters per minute (per https://www.livechatinc.com/typing-speed-test/#/). This translates to about 3 characters per second. This implies that a round trip for the request should take no longer than 300 milliseconds. Of course, there are users who do type faster than 3 characters per second and certain set of characters are obviously easier to type. So a safer ceiling will be about 150ms round trip time. 
   To evaluate this metric, a simple test script is needed that does the following:  
-   - Generates a characters every 150ms 
+   - Generates a character after each response or generate a character even 150ms using threads
    - Record the time taken for response
    - Average over a large set of requests
+   The goal is to have <150ms for every request. The multithreaded test might not be very useful. 
   
 
 2. One way to improve the autosuggest server is to give topic-specific suggestions. How would you design an auto-categorization server? It should take a list of messages and return a TopicId. (Assume that every conversation in the training set has a TopicId).
