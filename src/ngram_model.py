@@ -138,10 +138,10 @@ class BiGramModel():
         self.build_model(self.corpus)
         # self.load_model()
         print(self.predict("hey"))
-        # print(self.predict("I c"))
-        # print(self.predict("It seems"))
-        # print(self.predict("h"))
-        # print(self.predict("i"))
+        print(self.predict("I c"))
+        print(self.predict("It seems"))
+        print(self.predict("h"))
+        print(self.predict("i"))
 
 
 if __name__ == '__main__':
