@@ -1,6 +1,4 @@
-"""
-Reference: https://github.com/rodricios/autocomplete/
-"""
+
 import time
 import re
 # import numpy as np
@@ -37,6 +35,8 @@ class BiGramModel():
                 self.bigram_model[tup[0]][tup[1]] += 1
             except:
                 pass
+
+        self.save_model()
 
     def save_model(self):
         utils.write_data_pkl(self.word_model, constants.WORD_MODEL_FILE)
@@ -100,7 +100,7 @@ class BiGramModel():
             probable_words = self.cur_word(parts[0])
         else:
             probable_words = self.cur_given_prev(parts[-2], parts[-1])
-        print("--- %s seconds ---" % (time.time() - start_time))
+        print("Probable word prediction: %s seconds ---" % (time.time() - start_time))
 
 
         probable_prefix = []
@@ -124,16 +124,17 @@ class BiGramModel():
             # with Pool(processes=32) as pool:
             #     sents = pool.starmap(self.get_sent_match, zip(probable_sent_indices, repeat(probable_prefix)))
             for s in probable_sent_indices:
-                if any(x in self.sentences[s] for x in probable_prefix): #Using 'startswith' takes longer than 'in'
-                    predictions.append(self.sentences[s]) #TODO- Sort by number of hits
-        print("--- %s seconds ---" % (time.time() - start_time))
+                if any(self.sentences[s].startswith(self.start + " " + x) for x in probable_prefix):
+                # if any(x in self.sentences[s] for x in probable_prefix): #Using 'startswith' takes longer than 'in'
+                    predictions.append(self.sentences[s].replace(self.start+" ", "").replace(" "+self.end, "")) #TODO- Sort by number of hits
+        print("Probable sentence prediction: %s seconds ---" % (time.time() - start_time))
 
-        return predictions
+        return {"Suggestions": predictions}
 
 
     def test(self):
-        # self.build_model(self.corpus)
-        self.load_model()
+        self.build_model(self.corpus)
+        # self.load_model()
         print(self.predict(self.start + " hey"))
         print(self.predict(self.start + " I c"))
         print(self.predict(self.start + " It seems"))

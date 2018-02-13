@@ -11,7 +11,7 @@ def get_agent_msgs(data):
     :param data: Raw conversations
     :return: List of sentences (split by '.' and '?')
     """
-    sentences = []
+    sentences = set()
     for entry in data['Issues']:
         for m in entry['Messages']:
             if not m['IsFromCustomer']:
@@ -19,7 +19,7 @@ def get_agent_msgs(data):
                 temp = temp.lower()
                 sents = temp.split(".")
                 for s in sents:
-                    sentences.append(constants.START_TOKEN + ' ' + s + ' ' + constants.END_TOKEN)
+                    sentences.add(constants.START_TOKEN + ' ' + s + ' ' + constants.END_TOKEN)
                     #Append Start and end token to all sentences
     return sentences
 
@@ -66,10 +66,11 @@ def build_vocab(sentences):
 def main():
     data = utils.read_data_json(constants.RAW_DATA_FILE)
     sentences = get_agent_msgs(data)
-    # train_sentences =
-    inverted_index = build_inverted_index(sentences)
-    firstword_index = build_firstword_index(sentences)
-    vocab = build_vocab(sentences)
+    # train_sentences = sentences[:-500]
+    # test_sentences = sentences[500:]
+    inverted_index = build_inverted_index(list(sentences))
+    firstword_index = build_firstword_index(list(sentences))
+    vocab = build_vocab(list(sentences))
     paragraph = ''
     for s in sentences:
         paragraph = paragraph + s + ' '
@@ -78,7 +79,7 @@ def main():
     utils.write_data_pkl(inverted_index, constants.INVERTED_INDEX_FILE)
     utils.write_data_pkl(vocab, constants.VOCAB_FILE)
     utils.write_data_pkl(paragraph, constants.PARAGRAPH_FILE)
-    utils.write_data_pkl(sentences, constants.SENTENCES_LIST_FILE)
+    utils.write_data_pkl(list(sentences), constants.SENTENCES_LIST_FILE)
 
     # print data['Issues'][5]['Messages'][0]
 
