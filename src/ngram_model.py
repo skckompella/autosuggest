@@ -122,7 +122,6 @@ class BiGramModel():
             # with Pool(processes=32) as pool:
             #     sents = pool.starmap(self.get_sent_match, zip(probable_sent_indices, repeat(probable_prefix)))
 
-            #TODO- Rootcause the need for .strip() and change it
             #NOTE- Using "in" is faster than startswith
             for s in sorted(probable_sent_indices):
                 if any(self.sentences[s].startswith(x.strip()) for x in probable_prefix):
