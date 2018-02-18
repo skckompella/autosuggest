@@ -13,7 +13,6 @@ class BiGramModel():
         self.start = constants.START_TOKEN
         self.end = constants.END_TOKEN
         self.unk = constants.UNK_TOKEN
-        self.vocab = utils.read_data_pkl(constants.VOCAB_FILE)
         self.corpus = utils.read_data_pkl(constants.PARAGRAPH_FILE)
         self.inverted_index = utils.read_data_pkl(constants.INVERTED_INDEX_FILE)
         self.firstword_index = utils.read_data_pkl(constants.FIRSTWORD_INDEX_FILE)

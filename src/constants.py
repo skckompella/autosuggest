@@ -17,3 +17,4 @@ BIGRAM_MODEL_FILE = "../model/bigram_model.pkl"
 START_TOKEN = '__start__'
 END_TOKEN = '__end__'
 UNK_TOKEN = '__unk__'
+END_QUERY_TOKEN = '__endq__'

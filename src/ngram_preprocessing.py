@@ -22,9 +22,8 @@ def get_agent_msgs(data):
                 for s in sents:
                     sentence_count[(constants.START_TOKEN + ' ' + s.strip() + ' ' + constants.END_TOKEN)] += 1
                     sentence_list.append(constants.START_TOKEN + ' ' + s.strip() + ' ' + constants.END_TOKEN)
-                    #Append Start and end token to all sentences
+                    #Append Start and end token to all sentence
     return sentence_list, sentence_count
-
 
 
 def build_inverted_index(sentences):
@@ -70,22 +69,22 @@ def main():
     data = utils.read_data_json(constants.RAW_DATA_FILE)
     sentence_list, sentence_counts = get_agent_msgs(data)
 
-    ordered_unique_sents = []
-    for s in sentence_counts.most_common():
-        ordered_unique_sents.append(s[0])
-    train_sentences = ordered_unique_sents[:-500]
-    test_sentences = ordered_unique_sents[500:]
+    #Order by number of hits
+    ordered_unique_sents = [s[0] for s in sentence_counts.most_common()]
 
+    #SPlit?
+    train_sentences = ordered_unique_sents[:-500]
+    test_sentences = ordered_unique_sents[-500:]
+
+    #Build indexes for retrieval
     inverted_index = build_inverted_index(ordered_unique_sents)
     firstword_index = build_firstword_index(ordered_unique_sents)
-    vocab = build_vocab(ordered_unique_sents)
-    paragraph = ""
-    for s in sentence_list:
-        paragraph = paragraph + s + ' '
+
+    #Combine ngram training data into a single paragraph
+    paragraph = " ".join(sentence_list)
 
     utils.write_data_pkl(firstword_index, constants.FIRSTWORD_INDEX_FILE)
     utils.write_data_pkl(inverted_index, constants.INVERTED_INDEX_FILE)
-    utils.write_data_pkl(vocab, constants.VOCAB_FILE)
     utils.write_data_pkl(paragraph, constants.PARAGRAPH_FILE)
     utils.write_data_pkl(ordered_unique_sents, constants.UNIQUE_SENTENCE_LIST_FILE)
     utils.write_data_pkl(train_sentences, constants.TRAIN_SENT_LIST_FILE)
