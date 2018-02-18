@@ -33,7 +33,7 @@ class BiGramModel():
             try:
                 self.bigram_model[tup[0]][tup[1]] += 1
             except:
-                pass
+                print("Exception: Model not loaded?")
 
         self.save_model()
 
@@ -131,9 +131,9 @@ class BiGramModel():
 
 
     def test(self):
-        # self.build_model(self.corpus)
+        self.build_model(self.corpus)
         start_time = time.time()
-        self.load_model()
+        # self.load_model()
         print(self.predict("I c"))
         print(" > Total time: %s seconds ---" % (time.time() - start_time))
 
