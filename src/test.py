@@ -17,7 +17,7 @@ for w in chars:
         ret = requests.get(req)
         times.append(time() - start_time)
         print(req, ret.content)
-    req += " "
+    req += "+"
 
 print("Request times: ", times)
 print("Mean request time: ", mean(times))

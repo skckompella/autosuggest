@@ -76,6 +76,10 @@ def main():
     train_sentences = ordered_unique_sents[:-500]
     test_sentences = ordered_unique_sents[-500:]
 
+    #Get vocabulary
+    vocab = build_vocab(ordered_unique_sents)
+    print(len(vocab))
+
     #Build indexes for retrieval
     inverted_index = build_inverted_index(ordered_unique_sents)
     firstword_index = build_firstword_index(ordered_unique_sents)
