@@ -20,8 +20,8 @@ def get_agent_msgs(data):
                 temp = temp.lower()
                 sents = temp.split(".")
                 for s in sents:
-                    sentence_count[(constants.START_TOKEN + ' ' + s.strip() + ' ' + constants.END_TOKEN)] += 1
-                    sentence_list.append(constants.START_TOKEN + ' ' + s.strip() + ' ' + constants.END_TOKEN)
+                    sentence_count[utils.add_start_end(s)] += 1
+                    sentence_list.append(utils.add_start_end(s))
                     #Append Start and end token to all sentence
     return sentence_list, sentence_count
 
@@ -72,7 +72,7 @@ def main():
     #Order by number of hits
     ordered_unique_sents = [s[0] for s in sentence_counts.most_common()]
 
-    #SPlit?
+    #Split?
     train_sentences = ordered_unique_sents[:-500]
     test_sentences = ordered_unique_sents[-500:]
 
