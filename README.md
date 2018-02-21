@@ -77,14 +77,16 @@ Currently, the model ranks suggestions based on number of hits. If given the tim
 
    * **Accuracy of prediction**:  Accuracy is almost subjective here. We are enforcing the rule that all predicted sentences start with the the characters entered so far, so accuracy is pretty much guaranteed.
  
-   * **Usefulness of ranking**:   Ranking can mostly be tested only at a user level. The prediction chosen by the user should be among the top k in the list of predictions returned by the model. '5' is a good value for k. The ranking can thus be refined over time as the user uses the system more often.
+   * **Usefulness of ranking**:   Ranking can mostly be tested only at a user level.(Unless we can create a dataset with ordered suggestions) The prediction chosen by the user should be among the top k in the list of predictions returned by the model(recall@k). '5' is a good value for k. The ranking can thus be refined over time as the user uses the system more often.
  
    * **Performance (time for prediction)**: The most important metric is the performance of the model. The predictions should update faster than the input. Typically an average user types at about 180 characters per minute (per https://www.livechatinc.com/typing-speed-test/#/). This translates to about 3 characters per second. This implies that a round trip for the request should take no longer than 300 milliseconds. Of course, there are users who do type faster than 3 characters per second and certain set of characters are obviously easier to type. So a safer ceiling will be about 150ms round trip time. 
   To evaluate this metric, a simple test script is needed that does the following:  
    - Generates a character after each response or generate a character even 150ms using threads
    - Record the time taken for response
    - Average over a large set of requests
-   The goal is to have <150ms for every request. The multithreaded test might not be very useful. 
+   The goal is to have <150ms for every request. The multithreaded test might not be very useful.
+   
+   * **Handling parallel requests** : As it is hosted as  a server, its should be able to handle parallel requests. Typical distributed systems evaluation methodologies apply here.
   
 
 **2. One way to improve the autosuggest server is to give topic-specific suggestions. How would you design an auto-categorization server? It should take a list of messages and return a TopicId. (Assume that every conversation in the training set has a TopicId).**
