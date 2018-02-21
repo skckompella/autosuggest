@@ -96,6 +96,7 @@ This is a text classification problem. Given that topicID is present in the trai
  * A linear SVM with with bag of words and TFIDF features, 
  * A fully connected neural network with one hot vector and TFIDF features 
  * A LSTM to generate sentence embedding which then feeds into a fully connected neural network classfier  
+ * A CNN to generate features that feeds into a fully connected neural network classfier
 
 **3. How would you evaluate if your auto-categorization server is good?**
 
